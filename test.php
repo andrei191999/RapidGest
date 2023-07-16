@@ -1,36 +1,34 @@
 <?php
 require("includes/functions.inc.php");
 require("header.php");
-$arr = stats($conn);
+// $arr = stats($conn);
 
-$dataPoints = array(
-	array("label"=> "01", "y"=> $arr[0]),
-	array("label"=> "02", "y"=> $arr[1]),
-	array("label"=> "03", "y"=> $arr[2]),
-	array("label"=> "04", "y"=> $arr[3]),
-	array("label"=> "05", "y"=> $arr[4]),
-	array("label"=> "06", "y"=> $arr[5]),
-	array("label"=> "07", "y"=> $arr[6]),
-	array("label"=> "08", "y"=> $arr[7]),
-	array("label"=> "09", "y"=> $arr[8]),
-	array("label"=> "10", "y"=> $arr[9]),
-    array("label"=> "11", "y"=> $arr[10]),
-	array("label"=> "12", "y"=> $arr[11]),
-	array("label"=> "13", "y"=> $arr[12]),
-	array("label"=> "14", "y"=> $arr[13]),
-	array("label"=> "15", "y"=> $arr[14]),
-	array("label"=> "16", "y"=> $arr[15]),
-	array("label"=> "17", "y"=> $arr[16]),
-	array("label"=> "18", "y"=> $arr[17]),
-	array("label"=> "19", "y"=> $arr[18]),
-	array("label"=> "20", "y"=> $arr[19])
-);
+// $dataPoints = array(
+// 	array("label"=> "01", "y"=> $arr[0]),
+// 	array("label"=> "02", "y"=> $arr[1]),
+// 	array("label"=> "03", "y"=> $arr[2]),
+// 	array("label"=> "04", "y"=> $arr[3]),
+// 	array("label"=> "05", "y"=> $arr[4]),
+// 	array("label"=> "06", "y"=> $arr[5]),
+// 	array("label"=> "07", "y"=> $arr[6]),
+// 	array("label"=> "08", "y"=> $arr[7]),
+// 	array("label"=> "09", "y"=> $arr[8]),
+// 	array("label"=> "10", "y"=> $arr[9]),
+//     array("label"=> "11", "y"=> $arr[10]),
+// 	array("label"=> "12", "y"=> $arr[11]),
+// 	array("label"=> "13", "y"=> $arr[12]),
+// 	array("label"=> "14", "y"=> $arr[13]),
+// 	array("label"=> "15", "y"=> $arr[14]),
+// 	array("label"=> "16", "y"=> $arr[15]),
+// 	array("label"=> "17", "y"=> $arr[16]),
+// 	array("label"=> "18", "y"=> $arr[17]),
+// 	array("label"=> "19", "y"=> $arr[18]),
+// 	array("label"=> "20", "y"=> $arr[19])
+// );
 	
 ?>
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <script>
+
+        <!-- <script>
             window.onload = function () {
             var chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
@@ -43,15 +41,15 @@ $dataPoints = array(
                 },
                 data: [{
                     type: "column",
-                    dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                    dataPoints: <?php // echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
                 }]
             });
             chart.render();
             }
-        </script>
+        </script> -->
     </head>
     <body>
-        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+        <!-- <div id="chartContainer" style="height: 370px; width: 100%;"></div>
         <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
         <div class="container" style="font-size:0.8vw">
@@ -77,6 +75,27 @@ $dataPoints = array(
                 <li class="list-group-item">19 - Deşeuri de la instalaţii de tratare a reziduurilor, de la staţiile de epurare a apelor uzate şi de la tratarea apelor pentru alimentare cu apa şi uz industrial</li>
                 <li class="list-group-item">20 - Deşeuri municipale şi asimilabile din comerţ, industrie, instituţii, inclusiv fracţiuni colectate separat</li>
             </ul>
-        </div>
-    </body>
-</html>             
+        </div> -->
+
+        
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>
+            </li>
+            </ul>
+            
+            <div class="tab-content">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">HOME</div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">MEANIU 1</div>
+  <div class="tab-pane fade" id="messages" role="tabpanel" aria-labelledby="messages-tab">MEANIU</div>
+</div>
+
+            <?php
+            require("footer.php");
+            ?>

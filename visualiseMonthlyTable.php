@@ -1,17 +1,40 @@
 <?php
-require("header.php");
-require("includes/functions.inc.php");
+    require_once("includes/auth.inc.php");
+    require("header.php");
+    require("includes/functions.inc.php");
 
-if(isset($_POST["visualiseMonthlyTable"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
+    if(isset($_POST["visualiseMonthlyTable"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $year = test_input($_POST["yearInput"]);
-    $month = $_POST["monthlyInput"];
-    $_SESSION["lunaAnPDF"] = test_input($month . "-" . $year);
-    $_SESSION["cuiPDF"] = test_input($_SESSION["CUI"]);
-}
+        $year = test_input($_POST["yearInput"]);
+        $month = $_POST["monthlyInput"];
+        $_SESSION["lunaAnPDF"] = test_input($month . "-" . $year);
+        $_SESSION["cuiPDF"] = test_input($_SESSION["CUI"]);
+    }
+
+    if(isset($_GET["error"]) || isset($_GET["warning"])) {
+        echo "<div class=\"mt-3 pt-2 container\">";
+        $error = $_GET["error"];
+        switch ($error) {
+            case "stmtFailedSeeMonthly":
+                echo "<div class = \"alert alert-danger container\" style = \"text-align: center\"> <strong>Aten&#355;ie!</strong> Din p&#259cate a ap&#259;rut o eroare. V&#259 rug&#259m rapota&#355;i eroarea suportului nostru. Tip eroare: \"STMTFSMONTHLY\".</div>";
+                break;
+            case "stmtFailedMonthlyPDF":
+                echo "<div class = \"alert alert-danger container\" style = \"text-align: center\"> <strong>Aten&#355;ie!</strong> Din p&#259cate a ap&#259;rut o eroare. V&#259 rug&#259m rapota&#355;i eroarea suportului nostru. Tip eroare: \"STMTFMONTHLYPDF\".</div>";
+                break;
+        }
+
+        $warning = $_GET["warning"];
+        switch ($warning) {
+            case "emptyInput":
+                echo "<div class = \"alert alert-warning container\" style = \"text-align: center\"> <strong>Aten&#355;ie!</strong> Completa&#355;i toate c&#226;mpurile obligatorii.</div>";
+                break;
+        }
+    }
+    echo "</div>";
+
 ?>
 
-<div class="container mt-5">
+<div class="container pt-4">
     <form action="visualiseMonthlyTable.php" method="POST">
         <div class="mb-3">
                 <label for="monthlyInput" class="form-label">Selecta&#355i luna<span class="text-danger">*</span></label>
@@ -22,7 +45,7 @@ if(isset($_POST["visualiseMonthlyTable"]) && $_SERVER["REQUEST_METHOD"] == "POST
                     <option value = "03">Martie</option>
                     <option value = "04">Aprilie</option>
                     <option value = "05">Mai</option>
-                    <option value = "05">Iunie</option>
+                    <option value = "06">Iunie</option>
                     <option value = "07">Iulie</option>
                     <option value = "08">August</option>
                     <option value = "09">Septembrie</option>
@@ -38,12 +61,6 @@ if(isset($_POST["visualiseMonthlyTable"]) && $_SERVER["REQUEST_METHOD"] == "POST
         <div class = "text-center">
             <input type="submit" class="btn btn-primary mb-2 mt-2 w-100" name="visualiseMonthlyTable" value="Vizualizare tabel">
         </div>
-        <?php
-            if(isset($_POST["visualiseMonthlyTable"]) && $_SERVER["REQUEST_METHOD"] == "POST") {    ?>
-                <div class = "text-center">
-                    <a class = "btn btn-info mb-2 mt-2 w-100" href="PDF/monthlyTablePDF.php" target="_blank">Vizualizare tabel in format PDF</a>
-                </div>
-        <?php } ?>
     </form>
 </div>
 
@@ -52,64 +69,67 @@ if(isset($_POST["visualiseMonthlyTable"]) && $_SERVER["REQUEST_METHOD"] == "POST
 if(isset($_POST["visualiseMonthlyTable"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
 
     $year = test_input($_POST["yearInput"]);
-    $month = $_POST["monthlyInput"];
-
-    $monthYear = $month . "-" . $year;
-    if (!checkMonthlyTable($conn, $monthYear)) {
-        header("location: ./visualiseMonthlyTable.php?error=tableNotExists");
+    $month = test_input($_POST["monthlyInput"]);
+    
+    if(empty($year) || empty($month)) {
+        header("location: ./visualiseMonthlyTable.php?warning=emptyInput");
         exit();
     }
 
+    $monthYear = $month . "-" . $year;
+
+    if (!checkMonthlyTable($conn, $monthYear)) {
+        echo "<div class=\" container\">";
+        echo "<div class = \"alert alert-warning container\" style = \"text-align: center\"> <strong>Aten&#355;ie!</strong> Nu exist&#259; acest tabel.</div>";
+        echo "</div>";
+        exit();
+    }
+    
 ?>
-    <div class="container-fluid mt-5" >
-        <table class="table">
-            <thead>
-                <tr>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Nume produs</th>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Total unitati vandute</th>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Stare fizica</th>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Tip deseu generat</th>
-                    <th colspan="4" rowspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Cantitate de deseuri</th>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Luna si an</th>
-                </tr>
-                <tr>
-                    <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">generata</th>
-                    <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">valorificata</th>
-                    <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">eliminata final</th>
-                    <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">ramasa in stoc</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php seeMonthlyTable($conn, $monthYear) ?>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Nume produs</th>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Total unitati vandute</th>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Stare fizica</th>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Tip deseu generat</th>
-                    <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">generata</th>
-                    <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">valorificata</th>
-                    <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">eliminata final</th>
-                    <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">ramasa in stoc</th>
-                    <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Luna si an</th>
-                </tr>
+    <div class = "container text-center">
+        <a class = "btn btn-info mb-2 mt-2 w-100" target="_blank" href="PDF/monthlyTablePdf.php">Vizualizare tabel &#238;n format PDF</a>
+    </div>
+    <div class="container-fluid pt-5" >
+        <div style="overflow-x: auto;">
+            <table class="table">
+                <thead>
                     <tr>
-                        <th colspan="4" rowspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Cantitate de deseuri</th>
+                        <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Cod de&#351;eu generat</th>
+                        <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Tip de&#351;eu generat (material)</th>
+                        <th colspan="4" rowspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Cantitate de de&#351;euri</th>
+                        <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Unitate de m&#259;sur&#259;</th>
+                        <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Luna si an</th>
                     </tr>
-            </tfoot>
-        </table>
+                    <tr>
+                        <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Generat&#259;</th>
+                        <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Valorificat&#259;</th>
+                        <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Eliminat&#259; final</th>
+                        <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Ramas&#259; in stoc</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <?php seeMonthlyTable($conn, $monthYear) ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Cod de&#351;eu generat</th>
+                        <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Tip de&#351;eu generat (material)</th>
+                        <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Generat&#259;</th>
+                        <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Valorificat&#259;</th>
+                        <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Eliminat&#259; final</th>
+                        <th rowspan="1" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Ramas&#259; in stoc</th>
+                        <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Unitate de m&#259;sur&#259;</th>
+                        <th rowspan="2" colspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Luna si an</th>
+                    </tr>
+                    <tr>
+                        <th colspan="4" rowspan="1" scope="col" style="text-align: center; border: 1px solid black; vertical-align: middle;">Cantitate de de&#351;euri</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 
 <?php 
-}
-
-if(isset($_GET["error"])) {
-    if($_GET["error"] == "tableNotExists") {
-        echo "<div class = \"alert alert-warning container\" style = \"text-align: center\"> <strong>Atentie!</strong> Tabelul lunar pentru aceasta luna nu a fost completat!</div>";
-    } elseif($_GET["error"] == "stmtFailedSeeMonthly") {
-        echo "<div class = \"alert alert-warning container\" style = \"text-align: center\"> Ne pare rau! Am intampinat o eroare. Va rugam incercati din nou.</div>";
     }
-}
-require("footer.php");
+    require("footer.php");
 ?>

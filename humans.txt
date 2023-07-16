@@ -1,0 +1,21 @@
+/*TEAM*/
+Founding-Father and Developer: Andrei Macovei
+Site: andrei191999@yahoo.com
+LinkedIn: https://www.linkedin.com/in/andrei-macovei-b94247103/
+Location: Romania, Timisoara
+
+Founding-Father and Developer: Teodor-Avram Ciochirca
+Site: github.com/Ciochirca, teodorciochirca@gmail.com
+Facebook: https://www.facebook.com/teodoravram.ciochirca/
+Instagram: @teodoravramciochirca
+Twitter: @ciochirca
+LinkedIn: https://www.linkedin.com/in/teodor-avram-ciochirca-0b09371ba/
+Location: Romania, Bucharest
+
+/*SITE*/
+Last update: 14/03/2021
+Language: Romanian
+Standards: HTML5, CSS3, JavaScript, PHP
+Components: Bootstrap5
+Doctype: PHP
+Software: Visual Studio Code, XAMPP, Google Chrome
