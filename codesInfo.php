@@ -14,12 +14,37 @@ $(document).ready(function(){
     $('#codes').DataTable({
         "processing": true,
         "serverSide": true,
-        "ajax": "includes/getCodesInfo.php"
+        "responsive": true,
+        "ajax": "includes/getCodesInfo.php",
+        "language": {
+            "lengthMenu": "Arata _MENU_ coduri pe pagina",
+            "zeroRecords": "Nu am gasit niciun cod....ne pare rau",
+            "info": "Codurile de la _START_ la _END_ din _TOTAL_",
+            "infoEmpty": "Nu exista date disponibile",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "decimal":        "",
+            "loadingRecords": "Se incarca...",
+            "processing":     "Procesare...",
+            "search":         "Cauta:",
+            "zeroRecords":    "Niciun cod gasit",
+            "paginate": {
+                "first":      "Prima",
+                "last":       "Ultima",
+                "next":       "Inainte",
+                "previous":   "Inapoi"
+            },
+            "aria": {
+                "sortAscending":  ": ordonati coloana crescator",
+                "sortDescending": ": ordonati coloana descrescator"
+            }
+        }
     });
 });
 </script>
 
-<div class="container mt-5">
+<div class="container mt-5" style="overflow-x: auto;">
     <table id="codes" class="display">
         <thead>
             <tr>
